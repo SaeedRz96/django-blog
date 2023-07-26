@@ -24,14 +24,17 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
     
-    def get_absolute_url(self):
+    @property
+    def absolute_url(self):
         return f'/blog/{self.slug}/'
 
-    def get_posts(self):
+    @property
+    def posts(self):
         return Post.objects.filter(blog=self)
     
-    def get_posts_count(self):
-        return self.get_posts().count()
+    @property
+    def posts_count(self):
+        return self.posts.count()
 
     def save(self, *args, **kwargs):
         # delete old logo file from storage when blog is updated
@@ -65,10 +68,14 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
-    def get_absolute_url(self):
+    @property
+    def absolute_url(self):
         return f'/post/{self.slug}/'
     
     def save(self, *args, **kwargs):
+        # check if author is in blog authers
+        if self.author not in self.blog.authers.all():
+            raise Exception('Author is not in blog authers')
         # delete old uploaded files from storage when post is updated
         try:
             this = Post.objects.get(id=self.id)
