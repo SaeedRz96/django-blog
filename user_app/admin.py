@@ -1,3 +1,6 @@
-from django.contrib import admin
+from django.contrib.admin import register,ModelAdmin
+from user_app.models import *
 
-# Register your models here.
+
+@register(UserToken)
+class UserTokenAdmin(ModelAdmin):...
