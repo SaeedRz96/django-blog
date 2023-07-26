@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'user_app',
+    'blog_app',
 ]
 
 MIDDLEWARE = [
