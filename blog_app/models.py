@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from bs4 import BeautifulSoup
 import os
+from taggit.managers import TaggableManager
+
 
 
 # you should set max_length for CharFileds if you use Django<4 or SQLite
@@ -65,6 +67,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_private = models.BooleanField(default=False)
+    tags = TaggableManager()
 
     class Meta:
         verbose_name_plural = 'Posts'

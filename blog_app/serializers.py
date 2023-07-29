@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer,StringRelatedField
 from .models import *
+from taggit.serializers import (TagListSerializerField,TaggitSerializer)
 
 
 class BlogSerializer(ModelSerializer):
@@ -12,10 +13,11 @@ class BlogSerializer(ModelSerializer):
 
 
 
-class PostSerializer(ModelSerializer):
+class PostSerializer(TaggitSerializer,ModelSerializer):
+    tags = TagListSerializerField()
     class Meta:
         model = Post
-        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes']
+        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes','tags']
     
 
 class CommentSerializer(ModelSerializer):

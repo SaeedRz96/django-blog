@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django_filters',
     'user_app',
     'blog_app',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+TAGGIT_STRIP_UNICODE_WHEN_SLUGIFYING = True
 
 LANGUAGE_CODE = 'en-us'
 

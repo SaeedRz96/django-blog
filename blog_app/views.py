@@ -34,11 +34,10 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['blog', 'author', 'is_active']
+    filterset_fields = ['blog', 'author', 'is_active','tags__name']
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'title']
     def list(self, request, *args, **kwargs):
-
         queryset = self.filter_queryset(self.get_queryset())
         # remove posts from private blogs if user is not subscribed
         for post in queryset:
@@ -49,7 +48,6 @@ class PostList(generics.ListCreateAPIView):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

@@ -7,6 +7,7 @@ django-cors-headers==4.2.0
 django-environ==0.10.0
 django-filter==23.2
 django-js-asset==2.1.0
+django-taggit==4.0.0
 djangorestframework==3.14.0
 h11==0.14.0
 Pillow==10.0.0
