@@ -105,4 +105,4 @@ class ReportAdmin(ModelAdmin):
     list_filter = ['reported_at',]
     search_fields = ['post__title', 'user__username', 'user__email', 'content']
     list_per_page = 10
-    autocomplete_fields = ['post', 'user']
+    autocomplete_fields = ['post', 'user', 'comment','reporter', 'blog']
