@@ -177,3 +177,19 @@ class FollowTagList(generics.ListCreateAPIView):
     filterset_fields = ['tag', 'user']
     search_fields = ['user__username']
     ordering_fields = ['followed_at']
+
+
+class ReportList(generics.ListCreateAPIView):
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['post','comment' ,'user', 'status', 'report_type']
+    search_fields = ['user__username']
+    ordering_fields = ['reported_at']
+
+
+class ReportDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+    permission_classes = [IsAuthenticated]

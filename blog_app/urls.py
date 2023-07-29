@@ -18,4 +18,6 @@ urlpatterns = [
     path('saved-post', SavedPostList.as_view(), name='saved_posts'),
     path('tag', TagList.as_view(), name='tags'),
     path('follow-tag', FollowTagList.as_view(), name='follow_tags'),
+    path('report', ReportList.as_view(), name='reports'),
+    path('report/<int:pk>', ReportDetail.as_view(), name='report_detail'),
 ]

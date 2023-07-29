@@ -97,3 +97,12 @@ class FollowTagAdmin(ModelAdmin):
     search_fields = ['tag__name', 'user__username', 'user__email']
     list_per_page = 10
     autocomplete_fields = ['tag', 'user']
+
+
+@register(Report)
+class ReportAdmin(ModelAdmin):
+    list_display = ['post', 'user', 'reported_at']
+    list_filter = ['reported_at',]
+    search_fields = ['post__title', 'user__username', 'user__email', 'content']
+    list_per_page = 10
+    autocomplete_fields = ['post', 'user']

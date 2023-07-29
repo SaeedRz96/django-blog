@@ -300,3 +300,20 @@ class FollowTag(models.Model):
 
     def __str__(self):
         return f'{self.user} on {self.tag}'
+
+
+class Report(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    report_type = models.CharField(choices=[('abusive', 'Abusive'), ('spam', 'Spam'), ('inappropriate', 'Inappropriate'),('advertising', 'Advertising'), ('other', 'Other')], default='other')
+    description = models.TextField(blank=True, null=True)
+    reported_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
+
+    class Meta:
+        verbose_name_plural = 'Reports'
+
+    def __str__(self):
+        return f'{self.user} on {self.post}'
+    
