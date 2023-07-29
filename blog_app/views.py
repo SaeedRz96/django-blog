@@ -135,3 +135,13 @@ class LikeList(generics.ListCreateAPIView):
     filterset_fields = ['post', 'user']
     search_fields = ['user__username']
     ordering_fields = ['liked_at']
+
+
+class LikeCommentList(generics.ListCreateAPIView):
+    queryset = LikeComment.objects.all()
+    serializer_class = LikeCommentSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['comment', 'user']
+    search_fields = ['user__username']
+    ordering_fields = ['liked_at']

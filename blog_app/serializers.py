@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer,StringRelatedField
 from .models import *
 
 
@@ -15,13 +15,15 @@ class BlogSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes', 'comments']
+        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes']
     
 
 class CommentSerializer(ModelSerializer):
+    likers = StringRelatedField(many=True)
+    replies = StringRelatedField(many=True)
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'post', 'author', 'content', 'created_at','likes','likers','replies']
 
 
 class SubscriberSerializer(ModelSerializer):
@@ -39,4 +41,10 @@ class SubscribeRequestSerializer(ModelSerializer):
 class LikeSerializer(ModelSerializer):
     class Meta:
         model = Like
+        fields = '__all__'
+
+
+class LikeCommentSerializer(ModelSerializer):
+    class Meta:
+        model = LikeComment
         fields = '__all__'

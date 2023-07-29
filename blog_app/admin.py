@@ -57,3 +57,12 @@ class LikeAdmin(ModelAdmin):
     search_fields = ['post__title', 'user__username', 'user__email']
     list_per_page = 10
     autocomplete_fields = ['post', 'user']
+
+
+@register(LikeComment)
+class LikeCommentAdmin(ModelAdmin):
+    list_display = ['comment', 'user', 'liked_at']
+    list_filter = ['liked_at',]
+    search_fields = ['comment__post__title', 'user__username', 'user__email']
+    list_per_page = 10
+    autocomplete_fields = ['comment', 'user']

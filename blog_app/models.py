@@ -121,6 +121,17 @@ class Comment(models.Model):
     reply_to = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def likes(self):
+        return LikeComment.objects.filter(comment=self).count()
+
+    @property
+    def replies(self):
+        return Comment.objects.filter(reply_to=self)
+    
+    @property
+    def likers(self):
+        return [like.user for like in LikeComment.objects.filter(comment=self)]
     class Meta:
         verbose_name_plural = 'Comments'
 
@@ -203,4 +214,22 @@ class Like(models.Model):
             if not self.post.blog.subscribers.filter(user=self.user).exists():
                 raise Exception('This blog is private. make request to subscribe.')
         super().save(*args, **kwargs)
+
+
+class LikeComment(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Like Comments'
+
+    def __str__(self):
+        return f'{self.user} on {self.comment}'
     
+    def save(self, *args, **kwargs):
+        # check if user is subscribed to this blog or blog is not private
+        if self.comment.post.blog.is_private:
+            if not self.comment.post.blog.subscribers.filter(user=self.user).exists() and self.comment.post.blog.owner != self.user:
+                raise Exception('This blog is private. make request to subscribe.')
+        super().save(*args, **kwargs)
