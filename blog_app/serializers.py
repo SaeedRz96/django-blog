@@ -50,3 +50,9 @@ class LikeCommentSerializer(ModelSerializer):
     class Meta:
         model = LikeComment
         fields = '__all__'
+
+
+class SavedPostSerializer(ModelSerializer):
+    class Meta:
+        model = SavedPost
+        fields = '__all__'

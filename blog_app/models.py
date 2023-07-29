@@ -233,6 +233,25 @@ class LikeComment(models.Model):
     def save(self, *args, **kwargs):
         # check if user is subscribed to this blog or blog is not private
         if self.comment.post.blog.is_private:
-            if not self.comment.post.blog.subscribers.filter(user=self.user).exists() and self.comment.post.blog.owner != self.user:
+            if not self.comment.post.blog.subscribers.filter(user=self.user).exists() and self.comment.post.blog.owner != self.user and self.comment.post.author != self.user:
+                raise Exception('This blog is private. make request to subscribe.')
+        super().save(*args, **kwargs)
+
+
+class SavedPost(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    saved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Saved Posts'
+
+    def __str__(self):
+        return f'{self.user} on {self.post}'
+    
+    def save(self, *args, **kwargs):
+        # check if user is subscribed to this blog or blog is not private
+        if self.post.blog.is_private:
+            if not self.post.blog.subscribers.filter(user=self.user).exists() and self.post.blog.owner != self.user and self.post.author != self.user:
                 raise Exception('This blog is private. make request to subscribe.')
         super().save(*args, **kwargs)

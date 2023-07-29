@@ -15,4 +15,5 @@ urlpatterns = [
     path('subscribe_request/<int:pk>', SubscribeRequestDetail.as_view(), name='subscribe_request_detail'),
     path('like', LikeList.as_view(), name='likes'),
     path('like-comment', LikeCommentList.as_view(), name='like_comments'),
+    path('saved-post', SavedPostList.as_view(), name='saved_posts'),
 ]
