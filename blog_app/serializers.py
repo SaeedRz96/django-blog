@@ -56,3 +56,9 @@ class SavedPostSerializer(ModelSerializer):
     class Meta:
         model = SavedPost
         fields = '__all__'
+
+
+class TagSerializer(ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'created_at', 'posts_count']

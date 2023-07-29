@@ -102,6 +102,12 @@ class Post(models.Model):
                     os.remove(image)
         except:
             pass
+        # save new tags in tags table
+        for tag in self.tags.all():
+            try:
+                Tag.objects.get(name=tag.name)
+            except:
+                Tag.objects.create(name=tag.name)
         super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
@@ -255,3 +261,23 @@ class SavedPost(models.Model):
             if not self.post.blog.subscribers.filter(user=self.user).exists() and self.post.blog.owner != self.user and self.post.author != self.user:
                 raise Exception('This blog is private. make request to subscribe.')
         super().save(*args, **kwargs)
+
+
+class Tag(models.Model):
+    name = models.CharField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def posts(self):
+        return Post.objects.filter(tags__name=self.name)
+    
+    @property
+    def posts_count(self):
+        return self.posts.count()
+    class Meta:
+        verbose_name_plural = 'Tags'
+
+    def __str__(self):
+        return self.name
+    
+    

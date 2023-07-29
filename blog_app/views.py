@@ -153,3 +153,17 @@ class SavedPostList(generics.ListCreateAPIView):
     filterset_fields = ['post', 'user']
     search_fields = ['user__username']
     ordering_fields = ['saved_at']
+
+
+class TagsPostCountOrder(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        return sorted(queryset, key=lambda t: t.posts_count, reverse=True)
+    
+class TagList(generics.ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,TagsPostCountOrder]
+    filterset_fields = ['name']
+    search_fields = ['name']
+    ordering_fields = ['created_at','name']

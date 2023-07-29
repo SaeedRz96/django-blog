@@ -82,3 +82,10 @@ class SavedPostAdmin(ModelAdmin):
     search_fields = ['post__title', 'user__username', 'user__email']
     list_per_page = 10
     autocomplete_fields = ['post', 'user']
+
+
+@register(Tag)
+class TagAdmin(ModelAdmin):
+    list_display = ['name', ]
+    search_fields = ['name',]
+    list_per_page = 10
