@@ -125,3 +125,13 @@ class SubscribeRequestDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubscribeRequest.objects.all()
     serializer_class = SubscribeRequestSerializer
     permission_classes = [IsAuthenticated]
+
+
+class LikeList(generics.ListCreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['post', 'user']
+    search_fields = ['user__username']
+    ordering_fields = ['liked_at']

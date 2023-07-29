@@ -13,4 +13,5 @@ urlpatterns = [
     path('subscriber/<int:pk>', SubscriberDetail.as_view(), name='subscriber_detail'),
     path('subscribe_request', SubscribeRequestList.as_view(), name='subscribe_requests'),
     path('subscribe_request/<int:pk>', SubscribeRequestDetail.as_view(), name='subscribe_request_detail'),
+    path('like', LikeList.as_view(), name='likes'),
 ]

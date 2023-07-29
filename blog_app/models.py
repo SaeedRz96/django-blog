@@ -76,6 +76,14 @@ class Post(models.Model):
     def absolute_url(self):
         return f'/post/{self.slug}/'
     
+    @property
+    def comments(self):
+        return Comment.objects.filter(post=self)
+    
+    @property
+    def likes(self):
+        return Like.objects.filter(post=self).count()
+
     def save(self, *args, **kwargs):
         # check if author is in blog authers
         if self.author not in self.blog.authers.all():
@@ -176,4 +184,23 @@ class SubscribeRequest(models.Model):
                 elif self.status == 'rejected':
                     self.is_deleted = True
                 super().save(*args, **kwargs)
-            
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Likes'
+
+    def __str__(self):
+        return f'{self.user} on {self.post}'
+    
+    def save(self, *args, **kwargs):
+        # check if user is subscribed to this blog or blog is not private
+        if self.post.blog.is_private:
+            if not self.post.blog.subscribers.filter(user=self.user).exists():
+                raise Exception('This blog is private. make request to subscribe.')
+        super().save(*args, **kwargs)
+    

@@ -48,3 +48,12 @@ class SubscribeRequestAdmin(ModelAdmin):
     search_fields = ['blog__title', 'user__username', 'user__email', 'email']
     list_per_page = 10
     autocomplete_fields = ['blog', 'user']
+
+
+@register(Like)
+class LikeAdmin(ModelAdmin):
+    list_display = ['post', 'user', 'liked_at']
+    list_filter = ['liked_at',]
+    search_fields = ['post__title', 'user__username', 'user__email']
+    list_per_page = 10
+    autocomplete_fields = ['post', 'user']

@@ -15,7 +15,7 @@ class BlogSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes', 'comments']
     
 
 class CommentSerializer(ModelSerializer):
@@ -33,4 +33,10 @@ class SubscriberSerializer(ModelSerializer):
 class SubscribeRequestSerializer(ModelSerializer):
     class Meta:
         model = SubscribeRequest
+        fields = '__all__'
+
+
+class LikeSerializer(ModelSerializer):
+    class Meta:
+        model = Like
         fields = '__all__'
