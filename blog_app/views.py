@@ -167,3 +167,13 @@ class TagList(generics.ListCreateAPIView):
     filterset_fields = ['name']
     search_fields = ['name']
     ordering_fields = ['created_at','name']
+
+
+class FollowTagList(generics.ListCreateAPIView):
+    queryset = FollowTag.objects.all()
+    serializer_class = FollowTagSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['tag', 'user']
+    search_fields = ['user__username']
+    ordering_fields = ['followed_at']

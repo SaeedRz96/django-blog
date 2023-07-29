@@ -17,4 +17,5 @@ urlpatterns = [
     path('like-comment', LikeCommentList.as_view(), name='like_comments'),
     path('saved-post', SavedPostList.as_view(), name='saved_posts'),
     path('tag', TagList.as_view(), name='tags'),
+    path('follow-tag', FollowTagList.as_view(), name='follow_tags'),
 ]

@@ -274,10 +274,29 @@ class Tag(models.Model):
     @property
     def posts_count(self):
         return self.posts.count()
+    
+    @property
+    def followers(self):
+        return [follow.user for follow in FollowTag.objects.filter(tag=self)]
+    
+    @property
+    def followers_count(self):
+        return len(self.followers)
+    
     class Meta:
         verbose_name_plural = 'Tags'
 
     def __str__(self):
         return self.name
     
+
+class FollowTag(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    followed_at = models.DateTimeField(auto_now_add=True)
     
+    class Meta:
+        verbose_name_plural = 'Follow Tags'
+
+    def __str__(self):
+        return f'{self.user} on {self.tag}'

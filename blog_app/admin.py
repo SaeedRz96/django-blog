@@ -89,3 +89,11 @@ class TagAdmin(ModelAdmin):
     list_display = ['name', ]
     search_fields = ['name',]
     list_per_page = 10
+
+
+@register(FollowTag)
+class FollowTagAdmin(ModelAdmin):
+    list_display = ['tag', 'user', ]
+    search_fields = ['tag__name', 'user__username', 'user__email']
+    list_per_page = 10
+    autocomplete_fields = ['tag', 'user']

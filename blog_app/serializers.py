@@ -59,6 +59,13 @@ class SavedPostSerializer(ModelSerializer):
 
 
 class TagSerializer(ModelSerializer):
+    followers = StringRelatedField(many=True)
     class Meta:
         model = Tag
-        fields = ['id', 'name', 'created_at', 'posts_count']
+        fields = ['id', 'name', 'created_at', 'posts_count','followers_count','followers']
+    
+
+class FollowTagSerializer(ModelSerializer):
+    class Meta:
+        model = FollowTag
+        fields = '__all__'
