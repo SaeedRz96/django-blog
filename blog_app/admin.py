@@ -22,3 +22,12 @@ class PostAdmin(ModelAdmin):
     list_per_page = 10
     prepopulated_fields = {'slug': ('title',)}
     autocomplete_fields = ['blog', 'author']
+
+
+@register(Comment)
+class CommentAdmin(ModelAdmin):
+    list_display = ['post', 'author',  'created_at']
+    list_filter = ['created_at',]
+    search_fields = ['post__title', 'author__username', 'author__email', 'content']
+    list_per_page = 10
+    autocomplete_fields = ['post', 'author']

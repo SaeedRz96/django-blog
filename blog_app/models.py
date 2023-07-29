@@ -100,3 +100,24 @@ class Post(models.Model):
         except:
             pass
         super().delete(*args, **kwargs)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    reply_to = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Comments'
+
+    def __str__(self):
+        return f'{self.author} on {self.post}'
+    
+    def save(self, *args, **kwargs):
+        # check reply_to is in post comments
+        if self.reply_to:
+            if self.reply_to.post != self.post:
+                raise Exception('Reply to is not in post comments')
+        super().save(*args, **kwargs)
