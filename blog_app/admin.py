@@ -31,3 +31,20 @@ class CommentAdmin(ModelAdmin):
     search_fields = ['post__title', 'author__username', 'author__email', 'content']
     list_per_page = 10
     autocomplete_fields = ['post', 'author']
+
+
+@register(Subscriber)
+class SubscriberAdmin(ModelAdmin):
+    list_display = ['blog', 'user', ]
+    search_fields = ['blog__title', 'user__username', 'user__email', 'email']
+    list_per_page = 10
+    autocomplete_fields = ['blog', 'user']
+
+
+@register(SubscribeRequest)
+class SubscribeRequestAdmin(ModelAdmin):
+    list_display = ['blog', 'user', ]
+    list_filter = ['requested_at','is_deleted','status']
+    search_fields = ['blog__title', 'user__username', 'user__email', 'email']
+    list_per_page = 10
+    autocomplete_fields = ['blog', 'user']

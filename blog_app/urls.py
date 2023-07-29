@@ -9,4 +9,8 @@ urlpatterns = [
     path('post/<int:pk>', PostDetail.as_view(), name='post_detail'),
     path('comment', CommentList.as_view(), name='comments'),
     path('comment/<int:pk>', CommentDetail.as_view(), name='comment_detail'),
+    path('subscriber', SubscriberList.as_view(), name='subscribers'),
+    path('subscriber/<int:pk>', SubscriberDetail.as_view(), name='subscriber_detail'),
+    path('subscribe_request', SubscribeRequestList.as_view(), name='subscribe_requests'),
+    path('subscribe_request/<int:pk>', SubscribeRequestDetail.as_view(), name='subscribe_request_detail'),
 ]

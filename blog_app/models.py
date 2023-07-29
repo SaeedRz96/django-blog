@@ -121,3 +121,55 @@ class Comment(models.Model):
             if self.reply_to.post != self.post:
                 raise Exception('Reply to is not in post comments')
         super().save(*args, **kwargs)
+
+
+class Subscriber(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Subscribers'
+
+    def __str__(self):
+        return f'{self.user} on {self.blog}'
+    
+
+class SubscribeRequest(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    requested_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = 'Subscribe Requests'
+
+    def __str__(self):
+        return f'{self.user} on {self.blog}'
+    
+    def save(self, *args, **kwargs):
+        # check subscribe request for only private blogs
+        if not self.blog.is_private:
+            raise Exception('Blog is not private')
+        # check if user is in blog authers or owner
+        if self.user not in self.blog.authers.all() and self.user != self.blog.owner:
+            # check if user is already requested
+            try:
+                SubscribeRequest.objects.get(blog=self.blog, user=self.user)
+                raise Exception('User is already requested')
+            except:
+                pass
+            # check if user is already subscribed
+            try:
+                Subscriber.objects.get(blog=self.blog, user=self.user)
+                raise Exception('User is already subscribed')
+            except:
+                if self.status == 'accepted':
+                    # create subscriber
+                    Subscriber.objects.create(blog=self.blog, user=self.user)
+                    self.is_deleted = True
+                elif self.status == 'rejected':
+                    self.is_deleted = True
+                super().save(*args, **kwargs)
+            

@@ -22,3 +22,15 @@ class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+
+class SubscriberSerializer(ModelSerializer):
+    class Meta:
+        model = Subscriber
+        fields = '__all__'
+
+
+class SubscribeRequestSerializer(ModelSerializer):
+    class Meta:
+        model = SubscribeRequest
+        fields = '__all__'
