@@ -36,6 +36,10 @@ class Blog(models.Model):
     def posts_count(self):
         return self.posts.count()
 
+    @property
+    def subscribers(self):
+        return Subscriber.objects.filter(blog=self)
+
     def save(self, *args, **kwargs):
         # delete old logo file from storage when blog is updated
         try:

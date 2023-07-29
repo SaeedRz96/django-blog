@@ -2,6 +2,7 @@ from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
@@ -26,22 +27,46 @@ class BlogDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     permission_classes = [IsAuthenticated]
-
+        
 
 class PostList(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.filter(is_active=True,blog__is_active=True)
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['blog', 'author', 'is_active']
     search_fields = ['title', 'content']
     ordering_fields = ['created_at', 'title']
+    def list(self, request, *args, **kwargs):
+
+        queryset = self.filter_queryset(self.get_queryset())
+        # remove posts from private blogs if user is not subscribed
+        for post in queryset:
+            if post.blog.is_private:
+                if not post.blog.subscribers.filter(user=request.user).exists():
+                    queryset = queryset.exclude(id=post.id)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    def retrieve(self, request, *args, **kwargs):
+        # check if user is subscribed to this blog or blog is not private
+        post = self.get_object()
+        if post.blog.is_private:
+            if not post.blog.subscribers.filter(user=request.user).exists():
+                raise ValidationError('This blog is private. make request to subscribe.')
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class CommentList(generics.ListCreateAPIView):
