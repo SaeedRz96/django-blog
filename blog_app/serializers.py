@@ -9,15 +9,13 @@ class BlogSerializer(ModelSerializer):
     class Meta:
         model = Blog
         fields = ['id', 'title', 'slug', 'logo', 'description', 'created_at', 'is_active', 'is_private', 'owner', 'authers', 'posts_count', 'absolute_url']
-        
-
-
+   
 
 class PostSerializer(TaggitSerializer,ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Post
-        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private', 'likes','tags']
+        fields = ['id', 'blog', 'author', 'title', 'slug', 'content', 'created_at', 'is_active', 'is_private','is_published', 'likes','tags']
     
 
 class CommentSerializer(ModelSerializer):

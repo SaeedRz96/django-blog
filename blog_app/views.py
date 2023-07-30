@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import *
 from .serializers import *
@@ -30,7 +31,7 @@ class BlogDetail(generics.RetrieveUpdateDestroyAPIView):
         
 
 class PostList(generics.ListCreateAPIView):
-    queryset = Post.objects.filter(is_active=True,blog__is_active=True)
+    queryset = Post.objects.filter(is_active=True,blog__is_active=True,is_published=True)
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -235,3 +236,19 @@ class UserBadgeList(generics.ListAPIView):
     filterset_fields = ['user', 'badge']
     search_fields = ['user__username']
     ordering_fields = ['date']
+
+
+class DraftList(APIView):
+    def get(self, request, format=None):
+        blog = request.query_params.get('blog', None)
+        if blog is not None:
+            # check if user is blog owner or in blog authors
+            if not request.user == Blog.objects.get(id=blog).owner and not request.user in Blog.objects.get(id=blog).authers.all():
+                raise ValidationError('You are not the owner or author of this blog.')
+            posts = Post.objects.filter(blog=blog,is_active=True,is_published=False)
+            serializer = PostSerializer(posts, many=True)
+            return Response(serializer.data)
+
+
+
+    

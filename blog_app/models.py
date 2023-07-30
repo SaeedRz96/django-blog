@@ -75,6 +75,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_private = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=True) # if false, post will not be shown in blog posts list, but will be shown in drafts list 
     tags = TaggableManager()
 
     class Meta:

@@ -23,4 +23,5 @@ urlpatterns = [
     path('series', SeriesList.as_view(), name='series'),
     path('series/<int:pk>', SeriesDetail.as_view(), name='series_detail'),
     path('user-badges', UserBadgeList.as_view(), name='user_badges'),
+    path('drafts', DraftList.as_view(), name='drafts'),
 ]
