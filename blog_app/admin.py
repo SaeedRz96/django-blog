@@ -106,3 +106,14 @@ class ReportAdmin(ModelAdmin):
     search_fields = ['post__title', 'user__username', 'user__email', 'content']
     list_per_page = 10
     autocomplete_fields = ['post', 'user', 'comment','reporter', 'blog']
+
+
+@register(Series)
+class SeriesAdmin(ModelAdmin):
+    list_display = ['title', 'blog','is_active', 'created_at',]
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['title', 'blog__title','description']
+    list_per_page = 10
+    prepopulated_fields = {'slug': ('title',)}
+    autocomplete_fields = ['blog', ]
+    filter_horizontal = ['posts']

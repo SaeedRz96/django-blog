@@ -318,4 +318,32 @@ class Report(models.Model):
 
     def __str__(self):
         return f'{self.user} on {self.post}'
+
+
+class Series(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    posts = models.ManyToManyField(Post, related_name='series_posts', blank=True, null=True)
+    title = models.CharField()
+    slug = models.CharField(unique=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = 'Series'
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def absolute_url(self):
+        return f'/series/{self.slug}/'
     
+    @property
+    def posts_count(self):
+        return self.posts.count()
+    
+    def delete(self, *args, **kwargs):
+        self.is_deleted = True
+        super().save(*args, **kwargs)

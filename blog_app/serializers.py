@@ -75,3 +75,10 @@ class ReportSerializer(ModelSerializer):
     class Meta:
         model = Report
         fields = '__all__'
+
+
+class SeriesSerializer(ModelSerializer):
+    class Meta:
+        model = Series
+        fields = '__all__'
+        read_only_fields = ['created_at']

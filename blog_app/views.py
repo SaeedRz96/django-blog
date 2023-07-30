@@ -159,6 +159,7 @@ class TagsPostCountOrder(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         return sorted(queryset, key=lambda t: t.posts_count, reverse=True)
     
+    
 class TagList(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -193,3 +194,34 @@ class ReportDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     permission_classes = [IsAuthenticated]
+
+
+class SeriesList(generics.ListCreateAPIView):
+    queryset = Series.objects.all()
+    serializer_class = SeriesSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['author', 'is_active']
+    search_fields = ['title']
+    ordering_fields = ['created_at', 'title']
+    def perform_create(self, serializer):
+        # check request user is blog owner
+        if not self.request.user == serializer.validated_data['author']:
+            raise ValidationError('You are not the author of this series.')
+        serializer.save(author=self.request.user)
+
+
+class SeriesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Series.objects.all()
+    serializer_class = SeriesSerializer
+    permission_classes = [IsAuthenticated]
+    def perform_update(self, serializer):
+        # check request user is blog owner
+        if not self.request.user == serializer.validated_data['author']:
+            raise ValidationError('You are not the author of this series.')
+        serializer.save(author=self.request.user)
+    def perform_destroy(self, instance):
+        # check request user is blog owner
+        if not self.request.user == instance.author:
+            raise ValidationError('You are not the author of this series.')
+        instance.delete()
