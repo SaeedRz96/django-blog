@@ -42,6 +42,14 @@ class Blog(models.Model):
     def subscribers(self):
         return Subscriber.objects.filter(blog=self)
 
+    @property
+    def subscribers_count(self):
+        return self.subscribers.count()
+    
+    @property
+    def series(self):
+        return Series.objects.filter(blog=self)
+
     def save(self, *args, **kwargs):
         # delete old logo file from storage when blog is updated
         try:
@@ -347,3 +355,27 @@ class Series(models.Model):
     def delete(self, *args, **kwargs):
         self.is_deleted = True
         super().save(*args, **kwargs)
+
+
+class Badge(models.Model):
+    title = models.CharField()
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='badges/')
+
+    class Meta:
+        verbose_name_plural = 'Badges'
+    
+    def __str__(self):
+        return self.title
+    
+
+class UserBadge(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'User Badges'
+    
+    def __str__(self):
+        return f'{self.user} on {self.badge}'

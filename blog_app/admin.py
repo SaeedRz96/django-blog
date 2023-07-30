@@ -117,3 +117,19 @@ class SeriesAdmin(ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     autocomplete_fields = ['blog', ]
     filter_horizontal = ['posts']
+
+
+@register(Badge)
+class BadgeAdmin(ModelAdmin):
+    list_display = ['title', 'description', 'image', ]
+    search_fields = ['title', 'description']
+    list_per_page = 10
+
+
+@register(UserBadge)
+class UserBadgeAdmin(ModelAdmin):
+    list_display = ['user', 'badge', 'date',]
+    list_filter = ['date']
+    search_fields = ['user__username', 'user__email', 'badge__title']
+    list_per_page = 10
+    autocomplete_fields = ['user', 'badge']

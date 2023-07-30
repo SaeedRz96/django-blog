@@ -82,3 +82,10 @@ class SeriesSerializer(ModelSerializer):
         model = Series
         fields = '__all__'
         read_only_fields = ['created_at']
+
+
+class UserBadgeSerializer(ModelSerializer):
+    class Meta:
+        model = UserBadge
+        fields = '__all__'
+        read_only_fields = ['date']

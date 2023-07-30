@@ -22,4 +22,5 @@ urlpatterns = [
     path('report/<int:pk>', ReportDetail.as_view(), name='report_detail'),
     path('series', SeriesList.as_view(), name='series'),
     path('series/<int:pk>', SeriesDetail.as_view(), name='series_detail'),
+    path('user-badges', UserBadgeList.as_view(), name='user_badges'),
 ]

@@ -159,7 +159,7 @@ class TagsPostCountOrder(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         return sorted(queryset, key=lambda t: t.posts_count, reverse=True)
     
-    
+
 class TagList(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -225,3 +225,13 @@ class SeriesDetail(generics.RetrieveUpdateDestroyAPIView):
         if not self.request.user == instance.author:
             raise ValidationError('You are not the author of this series.')
         instance.delete()
+
+
+class UserBadgeList(generics.ListAPIView):
+    queryset = UserBadge.objects.all()
+    serializer_class = UserBadgeSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['user', 'badge']
+    search_fields = ['user__username']
+    ordering_fields = ['date']
