@@ -66,7 +66,7 @@ python manage.py runserver
 
 Contributions are always welcome!
 
-Clone this repository, make your changes, and send your pull request.
+Fork this repository, make your changes, and send your pull request.
 
 #### Also, if you develop any frontend project for that, drop an issue to list your repository in the section below for the educational purposes 
 
